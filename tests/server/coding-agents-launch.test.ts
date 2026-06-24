@@ -215,32 +215,32 @@ describe('coding agent launch preparation', () => {
     expect(settings.env.ANTHROPIC_DEFAULT_SONNET_MODEL).not.toBe('claude-sonnet-4-6')
 
     const mcp = JSON.parse(readFileSync(join(result.rootDir, 'mcp.json'), 'utf-8'))
-    expect(mcp.mcpServers['hermes-studio-api']).toMatchObject({
+    expect(mcp.mcpServers['olympus-api']).toMatchObject({
       command: process.execPath,
-      args: [join(process.cwd(), 'bin/hermes-studio-mcp.mjs'), 'api'],
+      args: [join(process.cwd(), 'bin/olympus-mcp.mjs'), 'api'],
       env: {
         HERMES_WEB_UI_URL: 'http://127.0.0.1:8648',
         HERMES_WEB_UI_HOME: home,
         HERMES_WEBUI_STATE_DIR: home,
         HERMES_WEB_UI_PROFILE: 'default',
-        HERMES_MCP_SERVER_NAME: 'hermes-studio-api',
+        HERMES_MCP_SERVER_NAME: 'olympus-api',
         HERMES_MCP_TOOLSET: 'api',
         HERMES_WEB_UI_MANAGED_MCP: '1',
       },
     })
-    expect(mcp.mcpServers['hermes-studio-devices']).toMatchObject({
+    expect(mcp.mcpServers['olympus-devices']).toMatchObject({
       command: process.execPath,
-      args: [join(process.cwd(), 'bin/hermes-studio-mcp.mjs'), 'devices'],
+      args: [join(process.cwd(), 'bin/olympus-mcp.mjs'), 'devices'],
       env: {
-        HERMES_MCP_SERVER_NAME: 'hermes-studio-devices',
+        HERMES_MCP_SERVER_NAME: 'olympus-devices',
         HERMES_MCP_TOOLSET: 'devices',
       },
     })
-    expect(mcp.mcpServers['hermes-studio-use']).toMatchObject({
+    expect(mcp.mcpServers['olympus-use']).toMatchObject({
       command: process.execPath,
-      args: [join(process.cwd(), 'bin/hermes-studio-mcp.mjs'), 'use'],
+      args: [join(process.cwd(), 'bin/olympus-mcp.mjs'), 'use'],
       env: {
-        HERMES_MCP_SERVER_NAME: 'hermes-studio-use',
+        HERMES_MCP_SERVER_NAME: 'olympus-use',
         HERMES_MCP_TOOLSET: 'use',
       },
     })
@@ -282,9 +282,9 @@ describe('coding agent launch preparation', () => {
     expect(claudeMcp.mcpServers['hermes-studio']).toBeUndefined()
     expect(claudeMcp.mcpServers['hermes-web-ui-mcp']).toBeUndefined()
     expect(claudeMcp.mcpServers.custom).toEqual({ command: 'custom-mcp' })
-    expect(claudeMcp.mcpServers['hermes-studio-api']).toBeDefined()
-    expect(claudeMcp.mcpServers['hermes-studio-devices']).toBeDefined()
-    expect(claudeMcp.mcpServers['hermes-studio-use']).toBeDefined()
+    expect(claudeMcp.mcpServers['olympus-api']).toBeDefined()
+    expect(claudeMcp.mcpServers['olympus-devices']).toBeDefined()
+    expect(claudeMcp.mcpServers['olympus-use']).toBeDefined()
 
     const codexRoot = join(home, 'coding-agent', 'model', 'default', 'openrouter', 'codex')
     const codexConfigPath = join(codexRoot, 'config.toml')
@@ -307,9 +307,9 @@ describe('coding agent launch preparation', () => {
     const codexConfig = readFileSync(join(codex.rootDir, 'config.toml'), 'utf-8')
     expect(codexConfig).not.toContain('[mcp_servers.hermes-studio]')
     expect(codexConfig).not.toContain('[mcp_servers.hermes-web-ui-mcp]')
-    expect(codexConfig).toContain('[mcp_servers.hermes-studio-api]')
-    expect(codexConfig).toContain('[mcp_servers.hermes-studio-devices]')
-    expect(codexConfig).toContain('[mcp_servers.hermes-studio-use]')
+    expect(codexConfig).toContain('[mcp_servers.olympus-api]')
+    expect(codexConfig).toContain('[mcp_servers.olympus-devices]')
+    expect(codexConfig).toContain('[mcp_servers.olympus-use]')
   })
 
   it('isolates Claude Code settings for hidden chat runs only', async () => {
@@ -411,21 +411,21 @@ describe('coding agent launch preparation', () => {
     expect(config).toContain(`model_catalog_json = "${join(result.rootDir, 'codex-model-catalog.json')}"`)
     expect(config).toContain('model_reasoning_summary = "auto"')
     expect(config).toContain('developer_instructions = """')
-    expect(config).toContain('Hermes Studio MCP usage')
+    expect(config).toContain('Olympus MCP usage')
     expect(config).toContain('# 输出格式规范')
-    expect(config).toContain('[mcp_servers.hermes-studio-api]')
-    expect(config).toContain('[mcp_servers.hermes-studio-devices]')
-    expect(config).toContain('[mcp_servers.hermes-studio-use]')
+    expect(config).toContain('[mcp_servers.olympus-api]')
+    expect(config).toContain('[mcp_servers.olympus-devices]')
+    expect(config).toContain('[mcp_servers.olympus-use]')
     expect(config).toContain(`command = "${process.execPath}"`)
-    expect(config).toContain(`args = ["${join(process.cwd(), 'bin/hermes-studio-mcp.mjs')}", "api"]`)
-    expect(config).toContain(`args = ["${join(process.cwd(), 'bin/hermes-studio-mcp.mjs')}", "devices"]`)
-    expect(config).toContain(`args = ["${join(process.cwd(), 'bin/hermes-studio-mcp.mjs')}", "use"]`)
+    expect(config).toContain(`args = ["${join(process.cwd(), 'bin/olympus-mcp.mjs')}", "api"]`)
+    expect(config).toContain(`args = ["${join(process.cwd(), 'bin/olympus-mcp.mjs')}", "devices"]`)
+    expect(config).toContain(`args = ["${join(process.cwd(), 'bin/olympus-mcp.mjs')}", "use"]`)
     expect(config).toContain(`env = { HERMES_WEB_UI_URL = "http://127.0.0.1:8648", HERMES_WEB_UI_HOME = "${home}"`)
     expect(config).toContain('HERMES_WEBUI_STATE_DIR = "')
     expect(config).toContain('HERMES_WEB_UI_PROFILE = "default"')
-    expect(config).toContain('HERMES_MCP_SERVER_NAME = "hermes-studio-api"')
-    expect(config).toContain('HERMES_MCP_SERVER_NAME = "hermes-studio-devices"')
-    expect(config).toContain('HERMES_MCP_SERVER_NAME = "hermes-studio-use"')
+    expect(config).toContain('HERMES_MCP_SERVER_NAME = "olympus-api"')
+    expect(config).toContain('HERMES_MCP_SERVER_NAME = "olympus-devices"')
+    expect(config).toContain('HERMES_MCP_SERVER_NAME = "olympus-use"')
     expect(config).toContain('HERMES_MCP_TOOLSET = "api"')
     expect(config).toContain('HERMES_MCP_TOOLSET = "devices"')
     expect(config).toContain('HERMES_MCP_TOOLSET = "use"')

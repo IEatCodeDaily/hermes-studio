@@ -201,7 +201,7 @@ describe('handleCodingAgentRun', () => {
     writeModelRunProfileTokenMock.mockResolvedValue(undefined)
     getSystemPromptMock.mockReturnValue([
       'system prompt',
-      'Hermes Studio MCP usage: call hermes_studio_api_openapi_get before calling unfamiliar Web UI endpoints.',
+      'Olympus MCP usage: call hermes_studio_api_openapi_get before calling unfamiliar Web UI endpoints.',
       'Use hermes_studio_api_request with method, relative path, and JSON body/query fields.',
     ].join('\n'))
 
@@ -233,7 +233,7 @@ describe('handleCodingAgentRun', () => {
     expect(sendCodingAgentRunInputMock).toHaveBeenCalledWith(
       'session-1',
       'hello codex',
-      expect.stringContaining('system prompt\nHermes Studio MCP usage'),
+      expect.stringContaining('system prompt\nOlympus MCP usage'),
     )
     const prompt = sendCodingAgentRunInputMock.mock.calls.at(-1)?.[2]
     expect(prompt).toContain('hermes_studio_api_request')
@@ -242,6 +242,6 @@ describe('handleCodingAgentRun', () => {
     expect(prompt).not.toContain('Current Hermes Web UI model run token')
     expect(prompt).not.toContain('Hermes Web UI LAN device capabilities are MCP tools')
     expect(prompt).not.toContain('list_mcp_resources')
-    expect(prompt).not.toContain('mcp__hermes-studio__')
+    expect(prompt).not.toContain('mcp__olympus__')
   })
 })

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawn, execSync, execFileSync } from 'child_process'
-import { resolve, dirname, join, delimiter } from 'path'
+import { resolve, dirname, join, delimiter, basename } from 'path'
 import { fileURLToPath } from 'url'
 import { readFileSync, writeFileSync, unlinkSync, mkdirSync, openSync, chmodSync, statSync, existsSync, realpathSync } from 'fs'
 import { randomBytes, scryptSync } from 'crypto'
@@ -12,6 +12,8 @@ const serverEntry = resolve(__dirname, '..', 'dist', 'server', 'index.js')
 const pkgDir = resolve(__dirname, '..')
 const pkg = JSON.parse(readFileSync(resolve(pkgDir, 'package.json'), 'utf-8'))
 const VERSION = pkg.version
+const CLI_NAME = basename(process.argv[1] || 'olympus') || 'olympus'
+const DISPLAY_NAME = CLI_NAME === 'hermes-web-ui' ? 'hermes-web-ui' : 'olympus'
 const WEB_UI_HOME = process.env.HERMES_WEB_UI_HOME?.trim()
   ? resolve(process.env.HERMES_WEB_UI_HOME.trim())
   : resolve(homedir(), '.hermes-web-ui')
@@ -377,8 +379,8 @@ function removePid() {
 function startDaemon(port) {
   const existing = getPid()
   if (existing && isRunning(existing)) {
-    console.log(`  ✗ hermes-web-ui is already running (PID: ${existing})`)
-    console.log(`    Use "hermes-web-ui stop" to stop it first`)
+    console.log(`  ✗ ${DISPLAY_NAME} is already running (PID: ${existing})`)
+    console.log(`    Use "${DISPLAY_NAME} stop" to stop it first`)
     process.exit(1)
   }
   removePid()
@@ -440,12 +442,12 @@ function startDaemon(port) {
   const interval = 500
   let waited = 0
 
-  console.log(`  ⏳ Starting hermes-web-ui (PID: ${child.pid}, port: ${port})...`)
+  console.log(`  ⏳ Starting ${DISPLAY_NAME} (PID: ${child.pid}, port: ${port})...`)
 
   function poll() {
     waited += interval
     if (!isRunning(child.pid)) {
-      console.log('  ✗ Failed to start hermes-web-ui')
+      console.log(`  ✗ Failed to start ${DISPLAY_NAME}`)
       console.log(`    Check log: ${LOG_FILE}`)
       removePid()
       process.exit(1)
@@ -459,7 +461,7 @@ function startDaemon(port) {
           writePid(listeningPid)
         }
         const url = `http://localhost:${port}`
-        console.log(`  ✓ hermes-web-ui started`)
+        console.log(`  ✓ ${DISPLAY_NAME} started`)
         console.log(`    ${url}`)
         console.log(`    Log: ${LOG_FILE}`)
         if (shouldOpenBrowser()) {
@@ -497,7 +499,7 @@ function stopDaemon(options = {}) {
   let cleanedStalePid = false
   if (pidFromFile && !isRunning(pidFromFile)) {
     removePid()
-    console.log(`  ✓ hermes-web-ui was not running (cleaned stale PID: ${pidFromFile})`)
+    console.log(`  ✓ ${DISPLAY_NAME} was not running (cleaned stale PID: ${pidFromFile})`)
     pidFromFile = null
     cleanedStalePid = true
   }
@@ -515,7 +517,7 @@ function stopDaemon(options = {}) {
 
   if (!isRunning(pid)) {
     removePid()
-    console.log(`  ✓ hermes-web-ui was not running (cleaned stale PID)`)
+    console.log(`  ✓ ${DISPLAY_NAME} was not running (cleaned stale PID)`)
     return
   }
 
@@ -540,7 +542,7 @@ function stopDaemon(options = {}) {
       }
     }
     removePid()
-    console.log(`  ✓ hermes-web-ui stopped (PID: ${pid})`)
+    console.log(`  ✓ ${DISPLAY_NAME} stopped (PID: ${pid})`)
   } catch (err) {
     console.log(`  ✗ Failed to stop: ${err.message}`)
     process.exit(1)
@@ -643,13 +645,13 @@ async function main() {
   const command = process.argv[2] || 'start'
 
   if (['-v', '--version', 'version'].includes(command)) {
-    console.log(`hermes-web-ui v${VERSION}`)
+    console.log(`${DISPLAY_NAME} v${VERSION}`)
     process.exit(0)
   }
 
   if (['-h', '--help', 'help'].includes(command)) {
     console.log(`
-hermes-web-ui v${VERSION}
+${DISPLAY_NAME} v${VERSION}
 
 Usage: hermes-web-ui <command> [options]
 

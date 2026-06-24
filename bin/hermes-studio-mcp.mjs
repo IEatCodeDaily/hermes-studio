@@ -2,12 +2,12 @@
 import { createInterface } from 'node:readline'
 import { readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const DEFAULT_PORT = process.env.HERMES_WEB_UI_PORT || process.env.PORT || '8648'
 const DEFAULT_BASE_URL = `http://127.0.0.1:${DEFAULT_PORT}`
-const DISPLAY_COMMAND = 'hermes-studio-mcp'
+const DISPLAY_COMMAND = basename(process.argv[1] || 'olympus-mcp') || 'olympus-mcp'
 const SERVER_NAME = process.env.HERMES_MCP_SERVER_NAME || DISPLAY_COMMAND
 const TOOLSETS = new Set(['api', 'devices', 'use'])
 const ALLOWED_PUBLIC_REQUEST_HEADERS = new Set([
@@ -41,7 +41,7 @@ const VERSION = readPackageVersion()
 function printHelp() {
   process.stdout.write(`${DISPLAY_COMMAND} v${VERSION}
 
-Hermes Studio MCP stdio server.
+Olympus MCP stdio server.
 
 Usage:
   ${DISPLAY_COMMAND} [api|devices|use]
@@ -386,7 +386,7 @@ const moduleHints = {
     keywords: ['codex', 'claude', 'coding agent', 'install', 'run'],
   },
   Config: {
-    purpose: 'Read and update Hermes Web UI configuration.',
+    purpose: 'Read and update Olympus configuration.',
     keywords: ['config', 'settings', 'preferences'],
   },
   Devices: {
@@ -527,7 +527,7 @@ function compactOpenApiDocument(openapi, args = {}) {
   }
 
   return {
-    title: openapi?.info?.title || 'Hermes Studio API',
+    title: openapi?.info?.title || 'Olympus API',
     version: openapi?.info?.version || '',
     usage: hasFilters
       ? 'Use the selected operation details to call hermes_studio_api_request with method, path, query, and body. Auth and profile are handled by the MCP server.'
@@ -543,7 +543,7 @@ function compactOpenApiDocument(openapi, args = {}) {
 const authArgumentProperties = {
   token: {
     type: 'string',
-    description: 'Optional Hermes Web UI bearer token. Usually omit this and pass profile so the MCP server can read the temporary profile token.',
+    description: 'Optional Olympus bearer token. Usually omit this and pass profile so the MCP server can read the temporary profile token.',
   },
   profile: {
     type: 'string',
@@ -707,7 +707,7 @@ const tools = [
   {
     name: 'hermes_studio_api_openapi_get',
     toolset: 'api',
-    description: 'Return Hermes Studio API documentation as compact JSON. When the user asks to read/check the operation manual, API docs, endpoint docs, 接口文档, 接口手册, or 操作手册, call this tool without filters first to get the outline/module index. Without filters, returns only module purpose, keywords, and operation counts because the full API catalog is large. For endpoint details, call again with tag, path, or method filters, then use hermes_studio_api_request.',
+    description: 'Return Olympus API documentation as compact JSON. When the user asks to read/check the operation manual, API docs, endpoint docs, 接口文档, 接口手册, or 操作手册, call this tool without filters first to get the outline/module index. Without filters, returns only module purpose, keywords, and operation counts because the full API catalog is large. For endpoint details, call again with tag, path, or method filters, then use hermes_studio_api_request.',
     inputSchema: inputSchema({
         path: {
           type: 'string',
@@ -731,7 +731,7 @@ const tools = [
   {
     name: 'hermes_studio_api_request',
     toolset: 'api',
-    description: 'Execute a Hermes Studio operation by calling an endpoint path. Use hermes_studio_api_openapi_get first as the operation manual to inspect method, parameters, requestBody, and responses.',
+    description: 'Execute a Olympus operation by calling an endpoint path. Use hermes_studio_api_openapi_get first as the operation manual to inspect method, parameters, requestBody, and responses.',
     inputSchema: inputSchema({
         method: {
           type: 'string',
@@ -740,7 +740,7 @@ const tools = [
         },
         path: {
           type: 'string',
-          description: 'Relative Hermes Studio endpoint path from the operation manual, for example /api/hermes/sessions?limit=20. Full URLs and // paths are rejected.',
+          description: 'Relative Olympus endpoint path from the operation manual, for example /api/hermes/sessions?limit=20. Full URLs and // paths are rejected.',
         },
         body: {
           type: ['object', 'array', 'string', 'number', 'boolean', 'null'],
@@ -763,7 +763,7 @@ const tools = [
   {
     name: 'hermes_studio_use_chat_run',
     toolset: 'use',
-    description: 'Start one Hermes Studio chat or coding-agent run through the HTTP bridge and wait for completion.',
+    description: 'Start one Olympus chat or coding-agent run through the HTTP bridge and wait for completion.',
     inputSchema: inputSchema({
         input: {
           oneOf: [
@@ -852,7 +852,7 @@ const tools = [
   {
     name: 'hermes_studio_use_sessions_list',
     toolset: 'use',
-    description: 'List Hermes Studio chat sessions.',
+    description: 'List Olympus chat sessions.',
     inputSchema: inputSchema({
         limit: {
           type: 'number',
@@ -867,7 +867,7 @@ const tools = [
   {
     name: 'hermes_studio_use_sessions_count',
     toolset: 'use',
-    description: 'Count Hermes Studio chat sessions without returning the session list.',
+    description: 'Count Olympus chat sessions without returning the session list.',
     inputSchema: inputSchema({
         source: {
           type: 'string',
@@ -878,7 +878,7 @@ const tools = [
   {
     name: 'hermes_studio_use_usage_stats',
     toolset: 'use',
-    description: 'Query Hermes Studio usage totals, cost estimate, model breakdown, and daily trend for the selected profile.',
+    description: 'Query Olympus usage totals, cost estimate, model breakdown, and daily trend for the selected profile.',
     inputSchema: inputSchema({
         days: {
           type: 'number',
@@ -889,7 +889,7 @@ const tools = [
   {
     name: 'hermes_studio_use_session_get',
     toolset: 'use',
-    description: 'Get one Hermes Studio session by id.',
+    description: 'Get one Olympus session by id.',
     inputSchema: inputSchema({
         session_id: {
           type: 'string',
@@ -900,7 +900,7 @@ const tools = [
   {
     name: 'hermes_studio_use_session_messages',
     toolset: 'use',
-    description: 'Get messages for one Hermes Studio conversation. By default returns user and assistant messages only.',
+    description: 'Get messages for one Olympus conversation. By default returns user and assistant messages only.',
     inputSchema: inputSchema({
         session_id: {
           type: 'string',
@@ -930,7 +930,7 @@ const tools = [
   {
     name: 'hermes_studio_use_session_delete',
     toolset: 'use',
-    description: 'Delete one Hermes Studio session by id.',
+    description: 'Delete one Olympus session by id.',
     inputSchema: inputSchema({
         session_id: {
           type: 'string',
@@ -941,7 +941,7 @@ const tools = [
   {
     name: 'hermes_studio_use_session_rename',
     toolset: 'use',
-    description: 'Rename one Hermes Studio session title.',
+    description: 'Rename one Olympus session title.',
     inputSchema: inputSchema({
         session_id: {
           type: 'string',
@@ -956,13 +956,13 @@ const tools = [
   {
     name: 'hermes_studio_use_profiles_list',
     toolset: 'use',
-    description: 'List Hermes Studio profiles.',
+    description: 'List Olympus profiles.',
     inputSchema: inputSchema(),
   },
   {
     name: 'hermes_studio_use_available_models',
     toolset: 'use',
-    description: 'List available Hermes Studio models for the selected profile.',
+    description: 'List available Olympus models for the selected profile.',
     inputSchema: inputSchema(),
   },
   {
@@ -979,7 +979,7 @@ const tools = [
   {
     name: 'hermes_studio_use_provider_add',
     toolset: 'use',
-    description: 'Add or update a Hermes Studio model provider for the selected profile, then make it the active default provider/model.',
+    description: 'Add or update a Olympus model provider for the selected profile, then make it the active default provider/model.',
     inputSchema: inputSchema({
         name: {
           type: 'string',
@@ -1015,7 +1015,7 @@ const tools = [
   {
     name: 'hermes_studio_use_provider_delete',
     toolset: 'use',
-    description: 'Delete a Hermes Studio model provider or clear a built-in provider credential for the selected profile.',
+    description: 'Delete a Olympus model provider or clear a built-in provider credential for the selected profile.',
     inputSchema: inputSchema({
         pool_key: {
           type: 'string',

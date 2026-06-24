@@ -1,17 +1,22 @@
-# IEatCodeDaily Hermes Studio Fork
+# IEatCodeDaily Olympus Fork
 
-This repository is the IEatCodeDaily-maintained standalone branch of Hermes Studio.
+This repository is the IEatCodeDaily-maintained standalone branch of Olympus.
 
 ## Policy
 
-- `IEatCodeDaily/hermes-studio-maintained` is the canonical maintenance repository for our deployments.
+- `IEatCodeDaily/olympus` is the canonical maintenance repository for our deployments.
 - Upstream `EKKOLearnAI/hermes-studio` is no longer treated as an auto-sync source.
 - Upstream changes may be cherry-picked manually, but only after review and local verification.
 - Local fixes should land here first. Do not patch the global npm install in place without also porting the change back into this repository.
 
 ## Package identity
 
-The package name is scoped as `@ieatcodedaily/hermes-studio` so it can be published and installed independently from upstream's `hermes-web-ui` package. The CLI binary names remain compatible:
+The package name is scoped as `@ieatcodedaily/olympus` so it can be published and installed independently from upstream's `hermes-web-ui` package. The primary CLI binary names are:
+
+- `olympus`
+- `olympus-mcp`
+
+The legacy compatibility aliases remain available for now:
 
 - `hermes-web-ui`
 - `hermes-web-ui-mcp`

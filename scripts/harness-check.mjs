@@ -428,13 +428,13 @@ for (const phrase of [
   'Stop-Process -Id',
 ]) {
   if (!desktopInstallerScript.includes(phrase)) {
-    fail(`desktop installer must close stale Hermes Studio processes by installed executable path: ${phrase}`)
+    fail(`desktop installer must close stale Olympus processes by installed executable path: ${phrase}`)
   }
 }
 
 for (const phrase of [
   'https://download.ekkolearnai.com/latest',
-  'https://github.com/EKKOLearnAI/hermes-studio/releases/latest/download',
+  'https://github.com/IEatCodeDaily/olympus/releases/latest/download',
   'checkForUpdatesWithFallback()',
 ]) {
   if (!desktopUpdater.includes(phrase)) {

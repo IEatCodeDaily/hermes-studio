@@ -1,12 +1,12 @@
-# Hermes Studio
+# Olympus
 
-Electron desktop distribution for Hermes Studio.
+Electron desktop distribution for Olympus.
 
 ## Install
 
 Download the latest macOS, Windows, or Linux installer for your CPU
 architecture from the project
-[GitHub Releases](https://github.com/EKKOLearnAI/hermes-studio/releases/latest).
+[GitHub Releases](https://github.com/IEatCodeDaily/olympus/releases/latest).
 
 The desktop app bundles the Web UI runtime and launches it locally from the
 native shell app.
@@ -17,14 +17,14 @@ After the packaged desktop app starts, it installs managed command shims:
 
 | Command | Description |
 | --- | --- |
-| `hermes-studio` | Open the Hermes Studio desktop app |
-| `hermes-studio cli ...` | Run the bundled Hermes Agent CLI |
-| `hermes-studio web ...` | Run the bundled `hermes-web-ui` command |
-| `hermes-studio -h` | Show wrapper help |
-| `hermes-studio-mcp` | Run the managed Web UI MCP bridge |
+| `olympus` | Open the Olympus desktop app |
+| `olympus cli ...` | Run the bundled Hermes Agent CLI |
+| `olympus web ...` | Run the bundled `hermes-web-ui` command |
+| `olympus -h` | Show wrapper help |
+| `olympus-mcp` | Run the managed Web UI MCP bridge |
 
-Use `hermes-studio cli -h` for Hermes Agent CLI help and
-`hermes-studio web -h` for Web UI CLI help.
+Use `olympus cli -h` for Hermes Agent CLI help and
+`olympus web -h` for Web UI CLI help.
 
 ## Data directories
 

@@ -1,12 +1,12 @@
 {
-  "name": "@ieatcodedaily/hermes-studio",
-  "version": "0.6.18-iecd.0",
-  "description": "Self-hosted AI chat dashboard for Hermes Agent — multi-model web UI with multi-platform integration",
+  "name": "@ieatcodedaily/olympus",
+  "version": "0.6.18-olympus.0",
+  "description": "Self-hosted AI control plane for Hermes Agent — Olympus maintained distribution",
   "repository": {
     "type": "git",
-    "url": "https://github.com/IEatCodeDaily/hermes-studio-maintained.git"
+    "url": "https://github.com/IEatCodeDaily/olympus.git"
   },
-  "homepage": "https://github.com/IEatCodeDaily/hermes-studio-maintained#readme",
+  "homepage": "https://github.com/IEatCodeDaily/olympus#readme",
   "license": "BSL-1.1",
   "engines": {
     "node": ">=23.0.0"
@@ -29,9 +29,11 @@
     "vue3",
     "typescript",
     "ieatcodedaily-maintained",
-    "hermes-studio-fork"
+    "olympus"
   ],
   "bin": {
+    "olympus": "./bin/hermes-web-ui.mjs",
+    "olympus-mcp": "./bin/hermes-studio-mcp.mjs",
     "hermes-web-ui": "./bin/hermes-web-ui.mjs",
     "hermes-web-ui-mcp": "./bin/hermes-studio-mcp.mjs",
     "hermes-studio-mcp": "./bin/hermes-studio-mcp.mjs"

@@ -18,7 +18,7 @@ import {
 const PORT = Number(process.env.HERMES_DESKTOP_PORT) || 8748
 const START_HIDDEN = process.argv.includes('--hidden')
 const QUIT_EXISTING = process.argv.includes('--quit')
-const APP_USER_MODEL_ID = 'com.hermeswebui.studio'
+const APP_USER_MODEL_ID = 'com.ieatcodedaily.olympus'
 type WindowControlAction = 'minimize' | 'toggle-maximize' | 'close'
 
 let mainWindow: BrowserWindow | null = null
