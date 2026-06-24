@@ -130,7 +130,7 @@ describe('health controller version metadata', () => {
     await checkLatestVersion()
 
     expect(fetchMock).toHaveBeenCalledWith(
-      `https://registry.npmjs.org/${pkg.name}/latest`,
+      `https://registry.npmjs.org/${encodeURIComponent(pkg.name)}/latest`,
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     )
 

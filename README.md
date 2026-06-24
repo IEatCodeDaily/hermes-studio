@@ -1,29 +1,30 @@
 <p align="center">
-  <strong>Hermes Studio</strong>
+  <strong>Hermes Studio — IEatCodeDaily Maintained Fork</strong>
   <a href="./README_zh.md">中文</a>
 </p>
 
 <p align="center">
   A desktop app, local runtime, and web console for <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a>.<br/>
-  Chat with agents, manage models and profiles, connect platform channels,<br/>
-  automate jobs, inspect files, run coding agents, and keep everything local.
+  This fork is maintained independently by IEatCodeDaily for our Hermes deployments.<br/>
+  Upstream changes are reviewed/cherry-picked manually; this repository is the canonical source for our builds.
 </p>
 
 <p align="center">
-  <a href="https://github.com/EKKOLearnAI/hermes-studio/releases/latest">Download Hermes Studio Desktop</a>
+  <a href="https://github.com/IEatCodeDaily/hermes-studio-maintained/releases/latest">Download Hermes Studio Desktop</a>
   ·
-  <code>npm install -g hermes-web-ui && hermes-web-ui start</code>
+  <code>npm install -g github:IEatCodeDaily/hermes-studio-maintained && hermes-web-ui start</code>
 </p>
 
 <p align="center">
-  <img src="https://github.com/EKKOLearnAI/hermes-studio/blob/main/packages/client/src/assets/image.gif" alt="Hermes Web UI Demo" width="680"/>
+  <img src="https://github.com/IEatCodeDaily/hermes-studio-maintained/blob/main/packages/client/src/assets/image.gif" alt="Hermes Web UI Demo" width="680"/>
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/hermes-web-ui"><img src="https://img.shields.io/npm/v/hermes-web-ui?style=flat-square&color=blue" alt="npm version"/></a>
-  <a href="https://github.com/EKKOLearnAI/hermes-studio/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/hermes-web-ui?style=flat-square" alt="license"/></a>
-  <a href="https://github.com/EKKOLearnAI/hermes-studio/stargazers"><img src="https://img.shields.io/github/stars/EKKOLearnAI/hermes-studio?style=flat-square" alt="stars"/></a>
+  <a href="https://github.com/IEatCodeDaily/hermes-studio-maintained"><img src="https://img.shields.io/badge/maintained%20by-IEatCodeDaily-blue?style=flat-square" alt="maintained by IEatCodeDaily"/></a>
+  <a href="https://github.com/IEatCodeDaily/hermes-studio-maintained/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/hermes-web-ui?style=flat-square" alt="license"/></a>
 </p>
+
+> This is a maintained fork of `EKKOLearnAI/hermes-studio`. See [`docs/maintenance/FORK.md`](./docs/maintenance/FORK.md) for branch-away policy.
 
 ## Core Capabilities
 
