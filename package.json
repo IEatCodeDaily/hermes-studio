@@ -1,12 +1,12 @@
 {
-  "name": "@ieatcodedaily/olympus",
-  "version": "0.6.18-olympus.0",
-  "description": "Self-hosted AI control plane for Hermes Agent — Olympus maintained distribution",
+  "name": "olympus",
+  "version": "0.6.20-olympus.0",
+  "description": "Self-hosted AI chat dashboard for Hermes Agent \u2014 multi-model web UI with multi-platform integration",
   "repository": {
     "type": "git",
-    "url": "https://github.com/IEatCodeDaily/olympus.git"
+    "url": "https://github.com/EKKOLearnAI/hermes-studio.git"
   },
-  "homepage": "https://github.com/IEatCodeDaily/olympus#readme",
+  "homepage": "https://hermes-studio.ai",
   "license": "BSL-1.1",
   "engines": {
     "node": ">=23.0.0"
@@ -27,16 +27,13 @@
     "self-hosted",
     "multi-platform",
     "vue3",
-    "typescript",
-    "ieatcodedaily-maintained",
-    "olympus"
+    "typescript"
   ],
   "bin": {
     "olympus": "./bin/hermes-web-ui.mjs",
-    "olympus-mcp": "./bin/hermes-studio-mcp.mjs",
-    "hermes-web-ui": "./bin/hermes-web-ui.mjs",
     "hermes-web-ui-mcp": "./bin/hermes-studio-mcp.mjs",
-    "hermes-studio-mcp": "./bin/hermes-studio-mcp.mjs"
+    "hermes-studio-mcp": "./bin/hermes-studio-mcp.mjs",
+    "olympus-mcp": "./bin/olympus-mcp.mjs"
   },
   "scripts": {
     "start": "vite --host --port 8648",
@@ -74,6 +71,11 @@
     "@audio/decode-mp3": "^1.1.0",
     "@audio/decode-wav": "^1.2.0",
     "@vscode/markdown-it-katex": "^1.1.2",
+    "@vue-flow/background": "^1.3.2",
+    "@vue-flow/controls": "^1.1.3",
+    "@vue-flow/core": "^1.48.2",
+    "@vue-flow/minimap": "^1.5.4",
+    "@vue-flow/node-resizer": "^1.5.1",
     "adm-zip": "^0.5.17",
     "eventsource": "^4.1.0",
     "js-tiktoken": "^1.0.21",

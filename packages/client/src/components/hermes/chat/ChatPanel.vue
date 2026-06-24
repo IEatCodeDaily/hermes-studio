@@ -34,6 +34,7 @@ import OutlinePanel from "./OutlinePanel.vue";
 import FilesPanel from "./FilesPanel.vue";
 import TerminalPanel from "./TerminalPanel.vue";
 import PageSidebarNav from "@/components/layout/PageSidebarNav.vue";
+import SettingsCircuitBadge from "@/components/layout/SettingsCircuitBadge.vue";
 import { isStoredSuperAdmin } from "@/api/client";
 
 const chatStore = useChatStore();
@@ -368,6 +369,21 @@ function getSelectableModelGroupsForProfile(profile: string) {
 
 function getDefaultModelForProfile(profile: string) {
   const groups = getSelectableModelGroupsForProfile(profile);
+  const activeProfileName = profilesStore.activeProfileName || "default";
+  const selectedProvider = appStore.selectedProvider || "";
+  const selectedModel = appStore.selectedModel || "";
+  const selectedGroup = selectedProvider
+    ? groups.find((group) => group.provider === selectedProvider)
+    : undefined;
+  if (
+    profile === activeProfileName &&
+    selectedGroup?.models.includes(selectedModel)
+  ) {
+    return {
+      provider: selectedProvider,
+      model: selectedModel,
+    };
+  }
   const profileModels = appStore.profileModelGroups.find(
     (entry) => entry.profile === profile,
   );
@@ -845,6 +861,14 @@ const showWorkspaceModal = ref(false);
 const workspaceValue = ref("");
 const workspaceSessionId = ref<string | null>(null);
 
+function openActiveSessionWorkspace() {
+  const session = chatStore.activeSession;
+  if (!session?.id) return;
+  workspaceSessionId.value = session.id;
+  workspaceValue.value = session.workspace || "";
+  showWorkspaceModal.value = true;
+}
+
 async function handleWorkspaceConfirm() {
   if (!workspaceSessionId.value) return;
   const ok = await setSessionWorkspace(
@@ -1257,8 +1281,8 @@ async function handleSessionModelCustomSubmit() {
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
           </svg>
           <span>{{ t("sidebar.settings") }}</span>
-          <!-- <SettingsCircuitBadge /> -->
         </button>
+        <SettingsCircuitBadge />
       </div>
     </aside>
 
@@ -1548,16 +1572,23 @@ async function handleSessionModelCustomSubmit() {
             </template>
           </NButton>
           <span class="header-session-title">{{ headerTitle }}</span>
-          <span
+          <button
             v-if="chatStore.activeSession?.workspace"
             class="workspace-badge"
+            type="button"
             :title="chatStore.activeSession.workspace"
-            >📁
-            {{
-              chatStore.activeSession.workspace.split("/").pop() ||
-              chatStore.activeSession.workspace
-            }}</span
+            @click="openActiveSessionWorkspace"
           >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            </svg>
+            <span>
+              {{
+                chatStore.activeSession.workspace.split("/").pop() ||
+                chatStore.activeSession.workspace
+              }}
+            </span>
+          </button>
         </div>
         <div class="header-actions">
           <!-- chat/live mode toggle hidden -->
@@ -2248,10 +2279,14 @@ async function handleSessionModelCustomSubmit() {
 .page-sidebar-bottom {
   flex-shrink: 0;
   padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .page-sidebar-menu-btn {
-  width: 100%;
+  flex: 1 1 auto;
+  width: auto;
   min-width: 0;
   height: 36px;
   border: none;
@@ -2402,16 +2437,35 @@ async function handleSessionModelCustomSubmit() {
 }
 
 .workspace-badge {
+  border: 0;
   font-size: 11px;
+  line-height: 16px;
   color: $text-muted;
   background: rgba(255, 255, 255, 0.05);
   padding: 2px 8px;
   border-radius: 4px;
   max-width: 160px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: default;
+  cursor: pointer;
+
+  svg {
+    flex: 0 0 auto;
+  }
+
+  span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:hover {
+    color: $text-secondary;
+    background: rgba(var(--accent-primary-rgb), 0.06);
+  }
 }
 
 .header-tool-toggle.active {

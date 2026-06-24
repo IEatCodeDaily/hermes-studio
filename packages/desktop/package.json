@@ -3,6 +3,10 @@
   "version": "0.6.18-olympus.0",
   "description": "Olympus desktop distribution with bundled Python runtime and hermes-agent",
   "homepage": "https://github.com/IEatCodeDaily/olympus#readme",
+  "name": "olympus",
+  "version": "0.6.20",
+  "description": "Hermes Studio desktop distribution with bundled Python runtime and hermes-agent",
+  "homepage": "https://hermes-studio.ai",
   "author": {
     "name": "Olympus Contributors",
     "email": "noreply@olympus.local"
