@@ -865,6 +865,7 @@ export default {
   // モデル
   models: {
     title: 'モデル',
+    selectingModel: 'モデルを選択中...',
     addProvider: 'プロバイダーを追加',
     refreshModelCache: 'モデルキャッシュを更新',
     refreshModelCacheLoading: 'モデルキャッシュを更新中...',

@@ -865,6 +865,7 @@ jobTriggered: 'Job ejecutado',
   // Models
   models: {
     title: 'Modelos',
+    selectingModel: 'Seleccionando modelo...',
     addProvider: 'Anadir proveedor',
     refreshModelCache: 'Actualizar cache de modelos',
     refreshModelCacheLoading: 'Actualizando cache de modelos...',

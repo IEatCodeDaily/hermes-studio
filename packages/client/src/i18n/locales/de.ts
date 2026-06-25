@@ -865,6 +865,7 @@ jobTriggered: 'Job ausgelost',
   // Models
   models: {
     title: 'Modelle',
+    selectingModel: 'Modell wird ausgewahlt...',
     addProvider: 'Anbieter hinzufugen',
     refreshModelCache: 'Modellcache aktualisieren',
     refreshModelCacheLoading: 'Modellcache wird aktualisiert...',

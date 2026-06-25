@@ -980,6 +980,7 @@ export default {
 
   models: {
     title: 'Модели',
+    selectingModel: 'Выбор модели...',
     searchPlaceholder: 'Поиск моделей...',
     noResults: 'Нет результатов',
     noModels: 'Нет моделей',

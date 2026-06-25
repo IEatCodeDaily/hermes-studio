@@ -59,6 +59,13 @@ const TOOL_PANEL_DEFAULT_WIDTH = 560;
 const TOOL_PANEL_STORAGE_KEY = "hermes.chat.toolPanelWidth";
 const toolPanelWidth = ref(loadToolPanelWidth());
 const toolResizeStart = ref<{ x: number; width: number } | null>(null);
+const SESSION_LIST_MIN_WIDTH = 220;
+const SESSION_LIST_DEFAULT_WIDTH = 240;
+const SESSION_LIST_MAX_WIDTH = 420;
+const SESSION_LIST_STORAGE_KEY = "hermes.chat.sessionListWidth";
+const isMobile = ref(false);
+const sessionListWidth = ref(loadSessionListWidth());
+const sessionResizeStart = ref<{ x: number; width: number } | null>(null);
 
 const currentMode = ref<"chat" | "live">("chat");
 
@@ -79,9 +86,11 @@ const showSessions = ref(
     !window.matchMedia("(max-width: 768px)").matches,
 );
 let mobileQuery: MediaQueryList | null = null;
-const isMobile = ref(false);
 const toolPanelStyle = computed(() => ({
   width: isMobile.value ? "100%" : `${toolPanelWidth.value}px`,
+}));
+const sessionListStyle = computed(() => ({
+  width: isMobile.value ? undefined : `${sessionListWidth.value}px`,
 }));
 
 function sessionHref(sessionId: string) {
@@ -108,6 +117,31 @@ function loadToolPanelWidth() {
     10,
   );
   return Number.isFinite(saved) ? Math.round(saved) : TOOL_PANEL_DEFAULT_WIDTH;
+}
+
+function loadSessionListWidth() {
+  if (typeof window === "undefined") return SESSION_LIST_DEFAULT_WIDTH;
+  const saved = Number.parseInt(
+    window.localStorage.getItem(SESSION_LIST_STORAGE_KEY) || "",
+    10,
+  );
+  return clampSessionListWidth(Number.isFinite(saved) ? saved : SESSION_LIST_DEFAULT_WIDTH);
+}
+
+function sessionListMaxWidth() {
+  if (typeof window === "undefined") return SESSION_LIST_MAX_WIDTH;
+  return Math.min(SESSION_LIST_MAX_WIDTH, Math.max(SESSION_LIST_MIN_WIDTH, window.innerWidth - 360));
+}
+
+function clampSessionListWidth(width: number) {
+  const maxWidth = sessionListMaxWidth();
+  const minWidth = Math.min(SESSION_LIST_MIN_WIDTH, maxWidth);
+  return Math.min(maxWidth, Math.max(minWidth, Math.round(width)));
+}
+
+function handleSessionListViewportResize() {
+  if (isMobile.value) return;
+  sessionListWidth.value = clampSessionListWidth(sessionListWidth.value);
 }
 
 function toolPanelMaxWidth() {
@@ -156,6 +190,38 @@ function startToolResize(event: PointerEvent) {
   };
   window.addEventListener("pointermove", handleToolResizeMove);
   window.addEventListener("pointerup", stopToolResize);
+  document.body.style.userSelect = "none";
+  document.body.style.cursor = "col-resize";
+}
+
+function handleSessionResizeMove(event: PointerEvent) {
+  const start = sessionResizeStart.value;
+  if (!start) return;
+  const delta = event.clientX - start.x;
+  sessionListWidth.value = clampSessionListWidth(start.width + delta);
+}
+
+function stopSessionResize() {
+  if (!sessionResizeStart.value) return;
+  sessionResizeStart.value = null;
+  window.removeEventListener("pointermove", handleSessionResizeMove);
+  window.removeEventListener("pointerup", stopSessionResize);
+  if (!isMobile.value) {
+    window.localStorage.setItem(SESSION_LIST_STORAGE_KEY, String(sessionListWidth.value));
+  }
+  document.body.style.userSelect = "";
+  document.body.style.cursor = "";
+}
+
+function startSessionResize(event: PointerEvent) {
+  if (isMobile.value || !showSessions.value) return;
+  event.preventDefault();
+  sessionResizeStart.value = {
+    x: event.clientX,
+    width: sessionListWidth.value,
+  };
+  window.addEventListener("pointermove", handleSessionResizeMove);
+  window.addEventListener("pointerup", stopSessionResize);
   document.body.style.userSelect = "none";
   document.body.style.cursor = "col-resize";
 }
@@ -214,6 +280,8 @@ function handleMobileChange(e: MediaQueryListEvent | MediaQueryList) {
   isMobile.value = e.matches;
   if (e.matches && showSessions.value) {
     showSessions.value = false;
+  } else if (!e.matches) {
+    handleSessionListViewportResize();
   }
 }
 
@@ -227,7 +295,9 @@ onMounted(() => {
   mobileQuery.addEventListener("change", handleMobileChange);
   window.addEventListener("hermes:open-page-sidebar", openPageSidebar);
   window.addEventListener("resize", handleToolPanelViewportResize);
+  window.addEventListener("resize", handleSessionListViewportResize);
   handleToolPanelViewportResize();
+  handleSessionListViewportResize();
   if (profilesStore.profiles.length === 0) {
     void profilesStore.fetchProfiles();
   }
@@ -237,7 +307,9 @@ onUnmounted(() => {
   mobileQuery?.removeEventListener("change", handleMobileChange);
   window.removeEventListener("hermes:open-page-sidebar", openPageSidebar);
   window.removeEventListener("resize", handleToolPanelViewportResize);
+  window.removeEventListener("resize", handleSessionListViewportResize);
   stopToolResize();
+  stopSessionResize();
 });
 watch(showToolPanel, async (visible) => {
   if (!visible || isMobile.value) return;
@@ -1080,8 +1152,16 @@ async function handleSessionModelCustomSubmit() {
     <aside
       v-if="currentMode === 'chat'"
       class="session-list"
-      :class="{ collapsed: !showSessions }"
+      :class="{ collapsed: !showSessions, resizing: !!sessionResizeStart }"
+      :style="sessionListStyle"
     >
+      <div
+        v-if="showSessions"
+        class="session-list-resize-handle"
+        role="separator"
+        aria-orientation="vertical"
+        @pointerdown="startSessionResize"
+      />
       <div v-if="showSessions" class="page-sidebar-top">
         <PageSidebarNav
           :active="chatStore.runtimeMode === 'global_agent' ? 'global' : 'chat'"
@@ -1975,10 +2055,15 @@ async function handleSessionModelCustomSubmit() {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  position: relative;
   transition:
     width $transition-normal,
     opacity $transition-normal;
   overflow: hidden;
+
+  &.resizing {
+    transition: opacity $transition-normal;
+  }
 
   &.collapsed {
     width: 0;
@@ -2004,7 +2089,71 @@ async function handleSessionModelCustomSubmit() {
   }
 }
 
+.session-list-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  width: 12px;
+  cursor: col-resize;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    background:
+      linear-gradient($border-color, $border-color) top / 1px calc(50% - 26px) no-repeat,
+      linear-gradient($border-color, $border-color) bottom / 1px calc(50% - 26px) no-repeat;
+    transition: background $transition-fast;
+    z-index: 1;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 1px;
+    width: 12px;
+    height: 38px;
+    transform: translateY(-50%);
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    background:
+      linear-gradient($text-muted, $text-muted) center 12px / 6px 1px no-repeat,
+      linear-gradient($text-muted, $text-muted) center 19px / 6px 1px no-repeat,
+      linear-gradient($text-muted, $text-muted) center 26px / 6px 1px no-repeat,
+      $bg-card;
+    opacity: 0.9;
+    transition: all $transition-fast;
+    z-index: 2;
+  }
+
+  &:hover::after {
+    background:
+      linear-gradient(var(--accent-primary), var(--accent-primary)) top / 1px calc(50% - 26px) no-repeat,
+      linear-gradient(var(--accent-primary), var(--accent-primary)) bottom / 1px calc(50% - 26px) no-repeat;
+  }
+
+  &:hover::before {
+    background:
+      linear-gradient(var(--accent-primary), var(--accent-primary)) center 12px / 6px 1px no-repeat,
+      linear-gradient(var(--accent-primary), var(--accent-primary)) center 19px / 6px 1px no-repeat,
+      linear-gradient(var(--accent-primary), var(--accent-primary)) center 26px / 6px 1px no-repeat,
+      $bg-card;
+    border-color: var(--accent-primary);
+    opacity: 1;
+  }
+}
+
 @media (max-width: $breakpoint-mobile) {
+  .session-list-resize-handle {
+    display: none;
+  }
+
   .session-close-btn {
     display: flex;
   }

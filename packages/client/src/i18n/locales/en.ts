@@ -1116,6 +1116,7 @@ export default {
   // Models
   models: {
     title: 'Models',
+    selectingModel: 'Selecting model...',
     searchPlaceholder: 'Search models...',
     noResults: 'No results',
     noModels: 'No models',

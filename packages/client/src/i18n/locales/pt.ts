@@ -865,6 +865,7 @@ jobTriggered: 'Job acionado',
   // Models
   models: {
     title: 'Modelos',
+    selectingModel: 'Selecionando modelo...',
     addProvider: 'Adicionar provedor',
     refreshModelCache: 'Atualizar cache de modelos',
     refreshModelCacheLoading: 'Atualizando cache de modelos...',

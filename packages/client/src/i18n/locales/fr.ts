@@ -865,6 +865,7 @@ jobTriggered: 'Job declenche',
   // Models
   models: {
     title: 'Modeles',
+    selectingModel: 'Selection du modele...',
     addProvider: 'Ajouter un fournisseur',
     refreshModelCache: 'Actualiser le cache des modeles',
     refreshModelCacheLoading: 'Actualisation du cache des modeles...',

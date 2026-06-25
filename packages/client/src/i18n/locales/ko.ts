@@ -865,6 +865,7 @@ export default {
   // 모델
   models: {
     title: '모델',
+    selectingModel: '모델 선택 중...',
     addProvider: 'Provider 추가',
     refreshModelCache: '모델 캐시 새로고침',
     refreshModelCacheLoading: '모델 캐시를 새로고침하는 중...',

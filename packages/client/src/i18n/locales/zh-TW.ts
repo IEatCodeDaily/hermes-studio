@@ -1116,6 +1116,7 @@ export default {
   // 模型
   models: {
     title: '模型',
+    selectingModel: '正在選擇模型...',
     searchPlaceholder: '搜尋模型...',
     noResults: '無結果',
     noModels: '無模型',
