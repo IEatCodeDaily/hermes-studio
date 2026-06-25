@@ -12,8 +12,8 @@ const serverEntry = resolve(__dirname, '..', 'dist', 'server', 'index.js')
 const pkgDir = resolve(__dirname, '..')
 const pkg = JSON.parse(readFileSync(resolve(pkgDir, 'package.json'), 'utf-8'))
 const VERSION = pkg.version
-const CLI_NAME = basename(process.argv[1] || 'olympus') || 'olympus'
-const DISPLAY_NAME = CLI_NAME === 'hermes-web-ui' ? 'hermes-web-ui' : 'olympus'
+const CLI_NAME = basename(process.argv[1] || 'hermes-studio') || 'hermes-studio'
+const DISPLAY_NAME = CLI_NAME === 'hermes-web-ui' ? 'hermes-web-ui' : 'hermes-studio'
 const WEB_UI_HOME = process.env.HERMES_WEB_UI_HOME?.trim()
   ? resolve(process.env.HERMES_WEB_UI_HOME.trim())
   : resolve(homedir(), '.hermes-web-ui')

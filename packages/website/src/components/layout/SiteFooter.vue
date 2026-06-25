@@ -20,7 +20,7 @@ const { t } = useI18n()
         <div class="footer-links">
           <a
             class="footer-social"
-            href="https://github.com/IEatCodeDaily/olympus"
+            href="https://github.com/IEatCodeDaily/hermes-studio"
             target="_blank"
             rel="noopener"
             :aria-label="t('footer.github')"

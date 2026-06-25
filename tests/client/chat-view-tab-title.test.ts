@@ -76,7 +76,7 @@ function makeSession(title: string): Session {
 describe('ChatView tab title', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    document.title = 'Olympus'
+    document.title = 'Hermes Studio'
     setActivePinia(createPinia())
 
     const appStore = useAppStore()
@@ -103,7 +103,7 @@ describe('ChatView tab title', () => {
     expect(document.title).toBe('Implementation Notes')
 
     wrapper.unmount()
-    expect(document.title).toBe('Olympus')
+    expect(document.title).toBe('Hermes Studio')
   })
 
   it('falls back to the product title when the session title is blank', () => {
@@ -112,7 +112,7 @@ describe('ChatView tab title', () => {
 
     const wrapper = mount(ChatView)
 
-    expect(document.title).toBe('Olympus')
+    expect(document.title).toBe('Hermes Studio')
     wrapper.unmount()
   })
 })

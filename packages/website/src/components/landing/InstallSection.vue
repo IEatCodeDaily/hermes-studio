@@ -15,13 +15,13 @@ const activeTab = ref<'desktop' | 'npm' | 'docker' | 'source'>('desktop')
 
 const releaseVersion = __WEBSITE_DOWNLOAD_VERSION__.replace(/^v/, '')
 const releaseTag = `v${releaseVersion}`
-const releaseBaseUrl = 'https://github.com/IEatCodeDaily/olympus/releases'
+const releaseBaseUrl = 'https://github.com/IEatCodeDaily/hermes-studio/releases'
 const releaseUrl = `${releaseBaseUrl}/tag/${releaseTag}`
 const githubDownloadUrl = `${releaseBaseUrl}/download/${releaseTag}`
 const cloudflareDownloadUrl = `https://download.ekkolearnai.com/${releaseTag}`
 const desktopDownloads = computed(() =>
   (tm('install.desktop.downloads') as DesktopDownload[]).map((item) => {
-    const assetName = `Olympus-${releaseVersion}-${item.assetSuffix}`
+    const assetName = `Hermes Studio-${releaseVersion}-${item.assetSuffix}`
     return {
       ...item,
       githubHref: `${githubDownloadUrl}/${assetName}`,

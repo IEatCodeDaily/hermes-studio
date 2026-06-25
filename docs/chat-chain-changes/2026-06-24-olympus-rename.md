@@ -1,9 +1,13 @@
 ---
 date: 2026-06-24
-feature: Olympus rename
+feature: Revert Olympus rename — keep maintained fork as Hermes Studio
 commit: pending
 ---
 
-Renamed the maintained distribution from Hermes Studio to Olympus across package metadata, desktop branding, MCP autoinjection names, OpenRouter attribution, and user-facing documentation.
+Reverted the short-lived Olympus rebrand. This maintained fork stays branded as
+Hermes Studio (`@ieatcodedaily/hermes-studio`, `hermes-web-ui` CLI, `hermes-studio-*`
+managed MCP server names). The name "Olympus" is reserved for a separate new
+React + Convex + Bun product, not this fork.
 
-Behavior impact: existing Hermes/Web UI state paths and legacy CLI aliases remain compatible, while new installs and managed MCP entries prefer `olympus`, `olympus-mcp`, and `olympus-*` MCP server names.
+Behavior impact: package name, CLI bins, managed MCP server names, and OpenRouter
+attribution return to the Hermes Studio identity. Repo renamed to IEatCodeDaily/hermes-studio.

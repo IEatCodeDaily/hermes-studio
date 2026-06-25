@@ -8,9 +8,9 @@ import { listProfileNamesFromDisk } from './hermes-profile'
 
 const LEGACY_SERVER_NAME = 'hermes-studio'
 const MANAGED_SERVERS = [
-  { name: 'olympus-api', toolset: 'api' },
-  { name: 'olympus-devices', toolset: 'devices' },
-  { name: 'olympus-use', toolset: 'use' },
+  { name: 'hermes-studio-api', toolset: 'api' },
+  { name: 'hermes-studio-devices', toolset: 'devices' },
+  { name: 'hermes-studio-use', toolset: 'use' },
 ] as const
 const MANAGED_SERVER_NAMES: Set<string> = new Set(MANAGED_SERVERS.map(server => server.name))
 const LEGACY_SERVER_NAMES = new Set([
@@ -27,7 +27,7 @@ const LEGACY_COMMANDS = new Set([
   'hermes-devices-mcp',
   'hermes-web-ui-mcp',
   'hermes-studio-mcp',
-  'olympus-mcp',
+  'hermes-studio-mcp',
 ])
 
 export type BundledMcpInjectionStatus = 'injected' | 'updated' | 'unchanged' | 'skipped'
@@ -79,9 +79,9 @@ function isDesktopRuntime(): boolean {
 function candidateBundledMcpScripts(): string[] {
   return [
     process.env.HERMES_WEB_UI_MCP_BIN,
-    join(process.cwd(), 'bin/olympus-mcp.mjs'),
-    join(__dirname, '../../bin/olympus-mcp.mjs'),
-    join(__dirname, '../../../../../bin/olympus-mcp.mjs'),
+    join(process.cwd(), 'bin/hermes-studio-mcp.mjs'),
+    join(__dirname, '../../bin/hermes-studio-mcp.mjs'),
+    join(__dirname, '../../../../../bin/hermes-studio-mcp.mjs'),
     join(process.cwd(), 'bin/hermes-studio-mcp.mjs'),
     join(__dirname, '../../bin/hermes-studio-mcp.mjs'),
     join(__dirname, '../../../../../bin/hermes-studio-mcp.mjs'),
@@ -97,7 +97,7 @@ function bundledMcpScriptPath(): string | null {
 
 function managedCommandConfig(toolset: string): Record<string, unknown> {
   if (isDesktopRuntime()) {
-    return { command: 'olympus-mcp', args: [toolset] }
+    return { command: 'hermes-studio-mcp', args: [toolset] }
   }
 
   const bundledScript = bundledMcpScriptPath()
@@ -106,7 +106,7 @@ function managedCommandConfig(toolset: string): Record<string, unknown> {
   }
 
   logger.warn({ candidates: candidateBundledMcpScripts() }, '[mcp-autoinject] bundled MCP script not found; falling back to PATH command')
-  return { command: 'olympus-mcp', args: [toolset] }
+  return { command: 'hermes-studio-mcp', args: [toolset] }
 }
 
 function managedConfig(profile: string, serverName: string, toolset: string): Record<string, unknown> {

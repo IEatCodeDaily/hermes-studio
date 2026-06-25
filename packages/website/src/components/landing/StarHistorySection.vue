@@ -10,12 +10,12 @@ const stars = ref<number | null>(null)
 const releaseVersion = __WEBSITE_DOWNLOAD_VERSION__
 
 const chartSrc = computed(() => {
-  return 'https://api.star-history.com/svg?repos=IEatCodeDaily%2Folympus&type=Date'
+  return 'https://api.star-history.com/svg?repos=IEatCodeDaily%2Fhermes-studio&type=Date'
 })
 
 onMounted(async () => {
   try {
-    const res = await fetch('https://api.github.com/repos/IEatCodeDaily/olympus')
+    const res = await fetch('https://api.github.com/repos/IEatCodeDaily/hermes-studio')
     const data = await res.json()
     stars.value = Number.isFinite(data.stargazers_count) ? data.stargazers_count : null
   } catch {}
@@ -30,7 +30,7 @@ onMounted(async () => {
     <div class="star-badges reveal reveal-delay-1">
       <a
         class="star-btn"
-        href="https://github.com/IEatCodeDaily/olympus"
+        href="https://github.com/IEatCodeDaily/hermes-studio"
         target="_blank"
         rel="noopener"
       >
@@ -47,7 +47,7 @@ onMounted(async () => {
 
     <div class="star-chart reveal reveal-delay-2">
       <a
-        href="https://www.star-history.com/?type=date&repos=IEatCodeDaily%2Folympus"
+        href="https://www.star-history.com/?type=date&repos=IEatCodeDaily%2Fhermes-studio"
         target="_blank"
         rel="noopener noreferrer"
         class="chart-link"

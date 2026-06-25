@@ -32,9 +32,9 @@ const CODING_AGENT_SCOPED_AUTH_PROVIDERS = new Set(['openai-codex', 'copilot', '
 const CLAUDE_CODE_SKIP_PERMISSIONS_ARGS = ['--dangerously-skip-permissions']
 const CLAUDE_CODE_ROOT_PERMISSION_ARGS = ['--permission-mode', 'auto']
 const HERMES_MCP_SERVERS = [
-  { name: 'olympus-api', toolset: 'api' },
-  { name: 'olympus-devices', toolset: 'devices' },
-  { name: 'olympus-use', toolset: 'use' },
+  { name: 'hermes-studio-api', toolset: 'api' },
+  { name: 'hermes-studio-devices', toolset: 'devices' },
+  { name: 'hermes-studio-use', toolset: 'use' },
 ] as const
 const HERMES_MCP_SERVER_NAMES: Set<string> = new Set(HERMES_MCP_SERVERS.map(server => server.name))
 const LEGACY_HERMES_MCP_SERVER_NAMES = new Set(['hermes-studio', 'hermes-studio-api', 'hermes-studio-devices', 'hermes-studio-use', 'hermes-studio-mcp', 'hermes-web-ui-mcp'])
@@ -43,7 +43,7 @@ const LEGACY_HERMES_MCP_COMMANDS = new Set([
   'hermes-devices-mcp',
   'hermes-web-ui-mcp',
   'hermes-studio-mcp',
-  'olympus-mcp',
+  'hermes-studio-mcp',
 ])
 const HERMES_MCP_MANAGED_ENV_KEY = 'HERMES_WEB_UI_MANAGED_MCP'
 const HERMES_PROMPT_BLOCK_BEGIN = '<!-- BEGIN HERMES WEB UI PROMPT -->'
@@ -802,9 +802,9 @@ function isDesktopRuntime(): boolean {
 function candidateBundledMcpScripts(): string[] {
   return [
     process.env.HERMES_WEB_UI_MCP_BIN,
-    join(process.cwd(), 'bin/olympus-mcp.mjs'),
-    join(__dirname, '../../bin/olympus-mcp.mjs'),
-    join(__dirname, '../../../../../bin/olympus-mcp.mjs'),
+    join(process.cwd(), 'bin/hermes-studio-mcp.mjs'),
+    join(__dirname, '../../bin/hermes-studio-mcp.mjs'),
+    join(__dirname, '../../../../../bin/hermes-studio-mcp.mjs'),
     join(process.cwd(), 'bin/hermes-studio-mcp.mjs'),
     join(__dirname, '../../bin/hermes-studio-mcp.mjs'),
     join(__dirname, '../../../../../bin/hermes-studio-mcp.mjs'),
@@ -819,10 +819,10 @@ function bundledMcpScriptPath(): string | null {
 }
 
 function hermesMcpCommandConfig(toolset: string): { command: string; args?: string[] } {
-  if (isDesktopRuntime()) return { command: 'olympus-mcp', args: [toolset] }
+  if (isDesktopRuntime()) return { command: 'hermes-studio-mcp', args: [toolset] }
   const script = bundledMcpScriptPath()
   if (script) return { command: process.execPath, args: [script, toolset] }
-  return { command: 'olympus-mcp', args: [toolset] }
+  return { command: 'hermes-studio-mcp', args: [toolset] }
 }
 
 function hermesMcpServerConfig(profile: string, serverName: string, toolset: string): { command: string; args?: string[]; env: Record<string, string> } {

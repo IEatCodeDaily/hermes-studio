@@ -175,7 +175,7 @@ export default {
     },
     source: {
       title: 'From Source',
-      cmd1: 'git clone https://github.com/IEatCodeDaily/olympus.git',
+      cmd1: 'git clone https://github.com/IEatCodeDaily/hermes-studio.git',
       cmd2: 'cd hermes-web-ui && npm install && npm run dev',
     },
     prereq: 'Requires Node.js >= 23',
@@ -209,7 +209,7 @@ export default {
     },
     gettingStarted: {
       title: 'Getting Started',
-      intro: 'Olympus is a self-hosted AI control plane for managing AI conversations, platform channels, scheduled jobs, and more. It wraps the Hermes Agent CLI and provides a beautiful web interface.',
+      intro: 'Hermes Studio is a self-hosted AI control plane for managing AI conversations, platform channels, scheduled jobs, and more. It wraps the Hermes Agent CLI and provides a beautiful web interface.',
       install: {
         title: 'Installation',
         content: 'Install globally via npm. Node.js 23 or higher is required.',

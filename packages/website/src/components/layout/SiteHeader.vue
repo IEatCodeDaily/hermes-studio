@@ -38,7 +38,7 @@ function goHome() {
         <a class="nav-link" @click.prevent="navigateTo('docs.esp32')">{{ t('nav.miniBox') }}</a>
         <a
           class="nav-link"
-          href="https://github.com/IEatCodeDaily/olympus"
+          href="https://github.com/IEatCodeDaily/hermes-studio"
           target="_blank"
           rel="noopener"
         >
@@ -67,9 +67,9 @@ function goHome() {
       <div class="mobile-menu-inner" @click.stop>
         <a class="mobile-link" @click.prevent="navigateTo('landing')">{{ t('nav.home') }}</a>
         <a class="mobile-link" @click.prevent="navigateTo('docs.getting-started')">{{ t('nav.docs') }}</a>
-        <a class="mobile-link" href="https://github.com/IEatCodeDaily/olympus" target="_blank" rel="noopener">{{ t('nav.github') }}</a>
+        <a class="mobile-link" href="https://github.com/IEatCodeDaily/hermes-studio" target="_blank" rel="noopener">{{ t('nav.github') }}</a>
         <a class="mobile-link" @click.prevent="navigateTo('docs.esp32')">{{ t('nav.miniBox') }}</a>
-        <a class="mobile-link" href="https://github.com/IEatCodeDaily/olympus" target="_blank" rel="noopener">{{ t('nav.github') }}</a>
+        <a class="mobile-link" href="https://github.com/IEatCodeDaily/hermes-studio" target="_blank" rel="noopener">{{ t('nav.github') }}</a>
         <div class="mobile-actions">
           <button class="mobile-action-btn" @click="switchLocale">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="action-icon">
