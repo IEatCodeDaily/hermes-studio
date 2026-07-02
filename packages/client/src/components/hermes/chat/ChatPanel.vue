@@ -426,6 +426,26 @@ function getModelGroupsForProfile(profile: string) {
   return profileModels?.groups || [];
 }
 
+// The chat execution path normalizes `claude-oauth` to `anthropic` before
+// persisting the session row, so sessions stored with provider `anthropic`
+// refer to the same catalog group keyed as `claude-oauth`. Treat them as
+// equivalent when matching a session against model catalog groups, otherwise
+// the provider-group lookup misses and the selector snaps to a fallback model
+// (e.g. the first model of the first group, typically a GLM model).
+function normalizeProviderKey(provider?: string | null): string {
+  return String(provider || "").toLowerCase();
+}
+const PROVIDER_ALIASES: Record<string, string> = { anthropic: "claude-oauth" };
+function aliasProvider(provider?: string | null): string {
+  const key = normalizeProviderKey(provider);
+  return PROVIDER_ALIASES[key] || key;
+}
+function providersMatch(sessionProvider: string | undefined | null, groupProvider: string | undefined | null): boolean {
+  if (!sessionProvider || !groupProvider) return false;
+  if (normalizeProviderKey(sessionProvider) === normalizeProviderKey(groupProvider)) return true;
+  return aliasProvider(sessionProvider) === aliasProvider(groupProvider);
+}
+
 function isCodingAgentAuthProvider(provider?: string) {
   return CODING_AGENT_AUTH_PROVIDER_KEYS.has(String(provider || "").toLowerCase());
 }
@@ -1037,17 +1057,21 @@ async function openSessionModelModal(sessionId: string) {
   sessionModelSessionId.value = sessionId;
   const groups = sessionModelBaseGroups.value;
   const providerGroup = session?.provider
-    ? groups.find((group) => group.provider === session.provider)
+    ? groups.find((group) => providersMatch(session.provider, group.provider))
     : undefined;
+  // If the session's model exists in its provider group, keep it selected.
+  // Otherwise prefer the session's model verbatim (custom/unlisted) rather
+  // than silently snapping to the group's first model.
+  const sessionModelInGroup = providerGroup?.models.includes(session?.model || "");
   const fallbackGroup = providerGroup || groups.find((group) => group.models.length > 0);
   const defaults = {
-    provider: fallbackGroup?.provider || "",
-    model: fallbackGroup?.models.includes(session?.model || "")
+    provider: providerGroup?.provider || fallbackGroup?.provider || "",
+    model: sessionModelInGroup
       ? session?.model || ""
-      : fallbackGroup?.models[0] || "",
+      : (session?.model || fallbackGroup?.models[0] || ""),
   };
   sessionModelValue.value = providerGroup ? session?.model || defaults.model || "" : defaults.model || "";
-  sessionModelProvider.value = providerGroup ? session?.provider || "" : defaults.provider || "";
+  sessionModelProvider.value = providerGroup ? providerGroup.provider : defaults.provider || "";
   sessionModelCustomProvider.value = sessionModelProvider.value;
   sessionModelSearch.value = "";
   sessionModelCustomInput.value = "";
