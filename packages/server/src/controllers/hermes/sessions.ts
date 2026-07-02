@@ -62,7 +62,7 @@ async function notifyBridgeSessionModelChanged(
     if (!state.ready || !state.running) return
     const bridge = new AgentBridgeClient({
       endpoint: state.endpoint,
-      timeoutMs: 30_000,
+      timeoutMs: 5000,
       connectRetryMs: 0,
     })
     await bridge.switchSessionModel(sessionId, model, runtimeProvider(provider), profile)

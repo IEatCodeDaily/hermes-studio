@@ -40,15 +40,12 @@ export async function resolveBridgeRunModelConfig(options: {
   const sessionProvider = String(options.sessionProvider || '').trim()
   const requestedModel = String(options.requestedModel || '').trim()
   const requestedProvider = String(options.requestedProvider || '').trim()
-
-  // An explicit session-level model selection always wins. The user deliberately
-  // picked this model; honour it even if it isn't listed in the provider catalog
-  // (common for Z.AI / GLM, whose /v1/models endpoint omits several models).
-  if (sessionModel && sessionProvider) {
-    return { model: sessionModel, provider: runtimeProvider(sessionProvider) }
-  }
-
-  // No session model — fall back to the config default rather than guessing,
-  // so new sessions start on the configured default instead of a stale value.
-  return resolveDefaultModelConfig(options.profile)
+  const candidateModel = sessionModel || requestedModel
+  const candidateProvider = sessionProvider || requestedProvider
+  const hasGroups = Array.isArray(options.modelGroups) && options.modelGroups.length > 0
+  const candidateAvailable = hasGroups && hasModelInGroups(options.modelGroups, candidateProvider, candidateModel)
+  const shouldUseDefault = !candidateModel || !candidateProvider || (hasGroups && !candidateAvailable)
+  return shouldUseDefault
+    ? resolveDefaultModelConfig(options.profile)
+    : { model: candidateModel, provider: runtimeProvider(candidateProvider) }
 }

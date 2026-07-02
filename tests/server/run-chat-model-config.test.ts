@@ -14,7 +14,7 @@ describe('run chat model config', () => {
     })
   })
 
-  it('uses the profile default for a new bridge session', async () => {
+  it('uses the requested model for a new bridge session before falling back to profile default', async () => {
     const { resolveBridgeRunModelConfig } = await import('../../packages/server/src/services/hermes/run-chat/model-config')
 
     const result = await resolveBridgeRunModelConfig({
@@ -24,8 +24,8 @@ describe('run chat model config', () => {
       modelGroups: [{ provider: 'openai', models: ['gpt-5.2'] }],
     })
 
-    expect(result).toEqual({ model: 'default-model', provider: 'default-provider' })
-    expect(readConfigYamlForProfileMock).toHaveBeenCalledWith('default')
+    expect(result).toEqual({ model: 'gpt-5.2', provider: 'openai' })
+    expect(readConfigYamlForProfileMock).not.toHaveBeenCalled()
   })
 
   it('keeps an existing session model ahead of a requested model', async () => {
@@ -47,7 +47,7 @@ describe('run chat model config', () => {
     expect(readConfigYamlForProfileMock).not.toHaveBeenCalled()
   })
 
-  it('falls back to profile default when only a requested model is available', async () => {
+  it('keeps an explicit model when no model group list is available', async () => {
     const { resolveBridgeRunModelConfig } = await import('../../packages/server/src/services/hermes/run-chat/model-config')
 
     const result = await resolveBridgeRunModelConfig({
@@ -56,34 +56,21 @@ describe('run chat model config', () => {
       requestedProvider: 'custom',
     })
 
-    expect(result).toEqual({ model: 'default-model', provider: 'default-provider' })
-    expect(readConfigYamlForProfileMock).toHaveBeenCalledWith('default')
+    expect(result).toEqual({ model: 'gpt-5.5', provider: 'custom' })
+    expect(readConfigYamlForProfileMock).not.toHaveBeenCalled()
   })
 
-  it('maps a session Claude OAuth provider to the Anthropic runtime provider', async () => {
+  it('maps Claude OAuth to the Anthropic runtime provider', async () => {
     const { resolveBridgeRunModelConfig } = await import('../../packages/server/src/services/hermes/run-chat/model-config')
 
     const result = await resolveBridgeRunModelConfig({
       profile: 'default',
-      sessionModel: 'claude-sonnet-4-6',
-      sessionProvider: 'claude-oauth',
+      requestedModel: 'claude-sonnet-4-6',
+      requestedProvider: 'claude-oauth',
       modelGroups: [{ provider: 'claude-oauth', models: ['claude-sonnet-4-6'] }],
     })
 
     expect(result).toEqual({ model: 'claude-sonnet-4-6', provider: 'anthropic' })
-    expect(readConfigYamlForProfileMock).not.toHaveBeenCalled()
-  })
-
-  it('keeps an explicit session model when no model group list is available', async () => {
-    const { resolveBridgeRunModelConfig } = await import('../../packages/server/src/services/hermes/run-chat/model-config')
-
-    const result = await resolveBridgeRunModelConfig({
-      profile: 'default',
-      sessionModel: 'gpt-5.5',
-      sessionProvider: 'custom',
-    })
-
-    expect(result).toEqual({ model: 'gpt-5.5', provider: 'custom' })
     expect(readConfigYamlForProfileMock).not.toHaveBeenCalled()
   })
 
